@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { PoolingGateway } from './pooling.gateway';
+import { PoolingController } from './pooling.controller';
+import { PoolingService } from './pooling.service';
 
 @Module({
-  providers: [PoolingGateway],
+  providers: [PoolingController, PoolingService],
 })
 export class PoolingModule {}

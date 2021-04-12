@@ -10,33 +10,44 @@ export class PoolingService {
   constructor() {
     this.socket = io(environment.socketApiUrl);
 
-    this.startPooling();
+    this.stablishSocketConnection();
   }
 
   socket;
 
-  startPooling() {
+  private stablishSocketConnection() {
     this.socket.on('connect', () => {
-      console.log('Connected');
-
-      this.socket.emit('pooling', { test: 'test' });
-
-      this.socket.emit('echo', 'hello my friend', (response: any) =>
-        console.log('echo:', response),
-      );
+      console.info('Socket connected');
     });
 
-    this.socket.on('pooling', function(data: any) {
-      console.log('pooling', data);
-    });
-
-    this.socket.on('exception', function(data: any) {
-      console.log('event', data);
+    this.socket.on('exception', function(error: any) {
+      console.error('Socket exception', error);
     });
 
     this.socket.on('disconnect', function() {
-      console.log('Disconnected');
+      console.error('Socket disconnected');
     });
   }
+
+  public createPool(poolConfig: any) {
+    this.socket.emit(
+      'pool/create',
+      poolConfig,
+      (result: any) => console.log('pool creation result: ', result)
+    );
+  }
+
+  public startPool(id: any) {
+    this.socket.emit(
+      'pool/start',
+      { id },
+      (result: any) => console.log('pool start result: ', result)
+    );
+
+    this.socket.on(`pool/${id}/result`, (result: any) => {
+      console.log('pool result: ', result);
+    })
+  }
+
 
 }
