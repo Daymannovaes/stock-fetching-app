@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+
+  socketApiUrl: 'http://localhost:3000', // @todo fix this
 };
