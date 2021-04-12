@@ -3,6 +3,12 @@ import { Injectable } from '@angular/core';
 import io from 'socket.io-client'; // v2 because this is the version Nestjs currently supports
 import { environment } from '../../../environments/environment';
 
+import {
+  CREATE_POOL,
+  START_POOL,
+} from '../../../../../domain/constants';
+import { Pooling } from '../../../../../domain/pooling.entity';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -29,18 +35,18 @@ export class PoolingService {
     });
   }
 
-  public createPool(poolConfig: any) {
+  public createPool(poolConfig: Partial<Pooling>) {
     this.socket.emit(
-      'pool/create',
+      CREATE_POOL,
       poolConfig,
       (result: any) => console.log('pool creation result: ', result)
     );
   }
 
-  public startPool(id: any) {
+  public startPool(id: number) {
     this.socket.emit(
-      'pool/start',
-      { id },
+      START_POOL,
+      id,
       (result: any) => console.log('pool start result: ', result)
     );
 
