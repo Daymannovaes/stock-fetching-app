@@ -1,0 +1,20 @@
+{
+  "name": "stock-fetching-app",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Daymannovaes/stock-fetching-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Daymannovaes/stock-fetching-app/issues"
+  },
+  "homepage": "https://github.com/Daymannovaes/stock-fetching-app#readme"
+}
