@@ -13,7 +13,7 @@ export class Pooling {
 
   isPoolingActive: boolean;
 
-  lastPoolingAt: Date;
+  lastPoolingStartedAt: Date;
 
   createdAt: Date;
 

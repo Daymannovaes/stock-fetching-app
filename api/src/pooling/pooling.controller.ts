@@ -13,6 +13,7 @@ import {
   START_POOL,
   POOL_RESULT,
   OK,
+  ERROR,
 } from '../../../domain/constants';
 import { CreatePoolingDto } from './dto/create-pooling.dto';
 
@@ -27,7 +28,7 @@ export class PoolingController {
     console.log('creating pool with: ', data);
     const pool = await this.poolingService.createPooling(data);
 
-    return pool ? pool.id.toString() : 'error';
+    return pool ? pool.id.toString() : ERROR;
   }
 
   @SubscribeTo(START_POOL)

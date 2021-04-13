@@ -1,1 +1,20 @@
 <h2>Stocks</h2>
+
+<form (ngSubmit)="onFormSubmit()">
+  <label>
+    pullURL:
+    <input type="text" [formControl]="pullURL">
+  </label>
+
+  <button type="submits">Start Pooling</button>
+</form>
+
+<div *ngIf="poolId !== undefined && poolResults.length">
+  <h6>Results for {{pullURL.value}}</h6>
+
+  <ul>
+    <li *ngFor="let result of poolResults">
+      {{result}}
+    </li>
+  </ul>
+</div>

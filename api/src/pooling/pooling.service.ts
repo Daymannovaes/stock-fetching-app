@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { HttpService, Injectable } from '@nestjs/common';
 import { CreatePoolingDto } from './dto/create-pooling.dto';
 import { Pooling } from './entities/pooling.entity';
 
 @Injectable()
 export class PoolingService {
+  constructor(private httpClient: HttpService) {}
+
   poolings: Pooling[] = [];
 
   async createPooling(
@@ -24,7 +26,7 @@ export class PoolingService {
 
     if (!pool) return undefined;
 
-    pool.start();
+    pool.start(this.httpClient);
 
     return pool;
   }

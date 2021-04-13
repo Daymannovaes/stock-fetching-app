@@ -1,5 +1,6 @@
 export const NOT_FOUND = 'not_found';
 export const OK = 'ok';
+export const ERROR = 'error';
 
 export const CREATE_POOL = 'pool/create';
 export const START_POOL = 'pool/start';

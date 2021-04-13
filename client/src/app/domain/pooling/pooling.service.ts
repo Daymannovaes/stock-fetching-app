@@ -6,6 +6,9 @@ import { environment } from '../../../environments/environment';
 import {
   CREATE_POOL,
   START_POOL,
+  STOP_POOL,
+  ERROR,
+  NOT_FOUND,
 } from '../../../../../domain/constants';
 import { Pooling } from '../../../../../domain/pooling.entity';
 
@@ -35,25 +38,28 @@ export class PoolingService {
     });
   }
 
-  public createPool(poolConfig: Partial<Pooling>) {
-    this.socket.emit(
-      CREATE_POOL,
-      poolConfig,
-      (result: any) => console.log('pool creation result: ', result)
-    );
+  public async createPool(poolConfig: Partial<Pooling>): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.socket.emit(
+        CREATE_POOL,
+        poolConfig,
+        (result: any) => result === ERROR ? reject(result) : resolve(result)
+      );
+  })
   }
 
-  public startPool(id: number) {
-    this.socket.emit(
-      START_POOL,
-      id,
-      (result: any) => console.log('pool start result: ', result)
-    );
+  public async startPool(id: number, onResult: Function = () => {}) {
+      this.socket.emit(
+        START_POOL,
+        id,
+        (result: any) => result === NOT_FOUND ? this.stopPool(id) : console.info(`pool start for ${id}`)
+      );
 
-    this.socket.on(`pool/${id}/result`, (result: any) => {
-      console.log('pool result: ', result);
-    })
+      this.socket.on(`pool/${id}/result`, onResult);
   }
 
-
+  public stopPool(id: number) {
+    this.socket.emit(STOP_POOL, id);
+    this.socket.off(`pool/${id}/result`);
+  }
 }
