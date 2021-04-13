@@ -1,3 +1,4 @@
+import { HttpModule } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Pooling } from './entities/pooling.entity';
 import { PoolingController } from './pooling.controller';
@@ -9,6 +10,7 @@ describe('PoolingController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [HttpModule],
       providers: [PoolingController, PoolingService],
     }).compile();
 

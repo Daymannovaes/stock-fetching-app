@@ -55,7 +55,7 @@ export class Pooling extends EventEmitter implements Base {
     this.isPoolingActive = true;
     this.httpClient = httpClient;
 
-    console.info(`pooling (${this.id}) start for url (${this.pullURL})`);
+    console.debug(`pooling (${this.id}) start for url (${this.pullURL})`);
 
     this.fetchNext();
   }
@@ -73,16 +73,10 @@ export class Pooling extends EventEmitter implements Base {
     const currentResult = await this.fetchAndEmitResult();
 
     if (!this.isPoolingActive) return this.stop();
+
     clearTimeout(this.poolingTimeout); // probably this isn't necessary. But just to be sure
 
     const nextPoolingAt = this.calculateNextPoolingTime(currentResult);
-
-    console.debug(
-      'fetchNext',
-      this.lastPoolingStartedAt,
-      nextPoolingAt,
-      currentResult,
-    );
 
     this.poolingTimeout = setTimeout(this.fetchNext.bind(this), nextPoolingAt); // call fetchNext again after some amount of time
 
@@ -91,7 +85,7 @@ export class Pooling extends EventEmitter implements Base {
 
   async fetchAndEmitResult(): Promise<number> {
     const value = await this.fetch();
-    this.emit(POOL_RESULT, value); // emit result for whoever is listening to this pooling
+    if (this.isPoolingActive) this.emit(POOL_RESULT, value);
 
     return value;
   }

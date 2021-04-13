@@ -1,3 +1,4 @@
+import { HttpModule } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Pooling } from './entities/pooling.entity';
 import { PoolingService } from './pooling.service';
@@ -7,6 +8,7 @@ describe('PoolingService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [HttpModule],
       providers: [PoolingService],
     }).compile();
 
@@ -42,9 +44,11 @@ describe('PoolingService', () => {
     });
 
     it('should return undefined for non existing poolId', async () => {
+      expect(service.poolings).toHaveLength(0);
       const fakeId = 123;
 
       expect(await service.startPooling(fakeId)).toBe(undefined);
+      expect(service.poolings).toHaveLength(0);
     });
   });
 });
