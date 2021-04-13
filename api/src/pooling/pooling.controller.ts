@@ -18,15 +18,14 @@ import {
 } from '../../../domain/constants';
 import { CreatePoolingDto } from './dto/create-pooling.dto';
 
-// @todo namespace for pool start, stop, result (due to nest poor integration with socket)
-
+// @todo add namespace for pool start, stop, result (hard due to nest poor integration with socket)
+// basically, move from pool/start, to pool/:id/start, etc
 @WebSocketGateway()
 export class PoolingController {
   constructor(private poolingService: PoolingService) {}
 
   @SubscribeTo(CREATE_POOL)
   async createPooling(@MessageBody() data: CreatePoolingDto): Promise<string> {
-    console.log('creating pool with: ', data);
     const pool = await this.poolingService.createPooling(data);
 
     return pool ? pool.id.toString() : ERROR;
@@ -41,8 +40,8 @@ export class PoolingController {
 
     if (!pool) return NOT_FOUND;
 
+    // starts to send results back to the client
     pool.on(POOL_RESULT, (result) => {
-      console.log(`pool ${pool.id} result called`);
       client.emit(`pool/${pool.id}/result`, result);
     });
 

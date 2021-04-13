@@ -1,5 +1,6 @@
 import { HttpModule } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { NOT_FOUND, OK, POOL_RESULT } from '../../../domain/constants';
 import { Pooling } from './entities/pooling.entity';
 import { PoolingController } from './pooling.controller';
 import { PoolingService } from './pooling.service';
@@ -44,23 +45,59 @@ describe('PoolingController', () => {
     });
   });
 
-  // @todo check how to test web socket
+  describe('startPooling', () => {
+    it('should start correctly', async () => {
+      const fakeId = 123;
+      const fakePooling = new Pooling('symbol');
+      fakePooling.id = fakeId;
 
-  // describe('startPooling', () => {
-  //   it('should start correctly', async () => {
-  //     const fakeId = 123;
-  //     const fakePooling = new Pooling('symbol');
-  //     fakePooling.id = fakeId;
+      const spy = jest.spyOn(fakePooling, 'on');
 
-  //     jest.spyOn(service, 'createPooling').mockResolvedValue(fakePooling);
+      const fakeSocket = {
+        emit: jest.fn(),
+      };
 
-  //     expect(await controller.startPooling('symbol', new Socket())).toBe(fakeId.toString());
-  //   });
+      jest.spyOn(service, 'startPooling').mockResolvedValue(fakePooling);
 
-  //   it('should return not found', async () => {
-  //     jest.spyOn(service, 'createPooling').mockResolvedValue(undefined);
+      expect(await controller.startPooling(fakeId, fakeSocket as any)).toBe(OK);
+      expect(spy).toBeCalledWith(POOL_RESULT, expect.any(Function));
+    });
 
-  //     expect(await controller.createPooling('symbol')).toBe('error');
-  //   });
-  // });
+    it('should return not found', async () => {
+      const fakeId = 123;
+
+      const fakeSocket = {
+        emit: jest.fn(),
+      };
+
+      jest.spyOn(service, 'startPooling').mockResolvedValue(undefined);
+
+      expect(await controller.startPooling(fakeId, fakeSocket as any)).toBe(
+        NOT_FOUND,
+      );
+    });
+  });
+
+  describe('stopPooling', () => {
+    it('should stop correctly', async () => {
+      const fakeId = 123;
+      const fakePooling = new Pooling('symbol');
+      fakePooling.id = fakeId;
+
+      const spy = jest.spyOn(fakePooling, 'removeAllListeners');
+
+      jest.spyOn(service, 'stopPooling').mockResolvedValue(fakePooling);
+
+      expect(await controller.stopPooling(fakeId)).toBe(OK);
+      expect(spy).toBeCalledWith(POOL_RESULT);
+    });
+
+    it('should return not found', async () => {
+      const fakeId = 123;
+
+      jest.spyOn(service, 'stopPooling').mockResolvedValue(undefined);
+
+      expect(await controller.stopPooling(fakeId)).toBe(NOT_FOUND);
+    });
+  });
 });

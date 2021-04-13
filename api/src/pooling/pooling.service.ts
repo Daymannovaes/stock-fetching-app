@@ -27,6 +27,7 @@ export class PoolingService {
       pool.stockVariationThreshold = poolingConfig.stockVariationThreshold;
     }
 
+    // @todo persist on database
     this.poolings.push(pool);
 
     return pool;
