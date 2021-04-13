@@ -14,6 +14,7 @@ import {
   POOL_RESULT,
   OK,
   ERROR,
+  STOP_POOL,
 } from '../../../domain/constants';
 import { CreatePoolingDto } from './dto/create-pooling.dto';
 
@@ -41,9 +42,20 @@ export class PoolingController {
     if (!pool) return NOT_FOUND;
 
     pool.on(POOL_RESULT, (result) => {
-      console.log(`pool ${pool.id} result called with ${result}`);
+      console.log(`pool ${pool.id} result called`);
       client.emit(`pool/${pool.id}/result`, result);
     });
+
+    return OK;
+  }
+
+  @SubscribeTo(STOP_POOL)
+  async stopPooling(@MessageBody() poolId: number): Promise<string> {
+    const pool = await this.poolingService.stopPooling(poolId);
+
+    if (!pool) return NOT_FOUND;
+
+    pool.removeAllListeners(POOL_RESULT);
 
     return OK;
   }

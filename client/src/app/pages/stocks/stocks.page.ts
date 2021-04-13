@@ -24,9 +24,15 @@ export class StocksPage implements OnInit {
     this.poolId = parseInt(poolId);
     this.poolResults = [];
 
-    this.poolingService.startPool(this.poolId, (result: string) => {
+    this.poolingService.startPool(this.poolId, (result: any) => {
       console.log('pool result: ', result);
-      this.poolResults.push(parseFloat(result));
+      this.poolResults.push(parseFloat(result.last));
     });
+  }
+
+  async stopCurrentPooling() {
+    this.poolingService.stopPool(this.poolId as number);
+    this.poolId = undefined;
+    this.poolResults = [];
   }
 }

@@ -30,4 +30,14 @@ export class PoolingService {
 
     return pool;
   }
+
+  async stopPooling(id: number) {
+    const pool = await this.getPoolingById(id);
+
+    if (!pool) return undefined;
+
+    pool.stop();
+
+    return pool;
+  }
 }
