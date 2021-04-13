@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Pooling } from '../../../../../domain/pooling.entity';
 import { PoolingService } from '../../domain/pooling/pooling.service';
 
 @Component({
   selector: 'app-stocks',
   templateUrl: './stocks.page.html',
+  styleUrls: ['./stocks.page.css']
 })
 export class StocksPage implements OnInit {
   constructor(private poolingService: PoolingService) {}
@@ -17,9 +19,13 @@ export class StocksPage implements OnInit {
   async ngOnInit() {}
 
   async onFormSubmit() {
-    const poolId = await this.poolingService.createPool({
+    this.createPool({
       pullURL: this.pullURL.value
     });
+  }
+
+  async createPool(poolConfig: Partial<Pooling>) {
+    const poolId = await this.poolingService.createPool(poolConfig);
 
     this.poolId = parseInt(poolId);
     this.poolResults = [];

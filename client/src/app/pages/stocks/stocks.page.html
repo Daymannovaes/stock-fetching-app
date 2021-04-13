@@ -2,7 +2,7 @@
 
 <form (ngSubmit)="onFormSubmit()">
   <label>
-    pullURL:
+    <strong>Pull URL:</strong>
     <input type="text" [formControl]="pullURL" placeholder="http://api.marketstack.com/v1/intraday?access_key=YOUR_KEY&symbols=aapl&limit=1">
   </label>
 
@@ -11,7 +11,7 @@
 
 <!-- @todo form to edit pooling settings -->
 
-<div *ngIf="poolId !== undefined && poolResults.length">
+<div id="results" *ngIf="poolId !== undefined && poolResults.length">
   <button (click)="stopCurrentPooling()">Stop current pooling</button>
   <h4>Results for {{pullURL.value}}</h4>
 

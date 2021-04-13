@@ -12,6 +12,21 @@ export class PoolingService {
     poolingConfig: CreatePoolingDto,
   ): Promise<Pooling | void> {
     const pool = new Pooling(poolingConfig.pullURL);
+
+    if (poolingConfig.lowFrequencyPoolingInterval) {
+      pool.lowFrequencyPoolingInterval =
+        poolingConfig.lowFrequencyPoolingInterval;
+    }
+
+    if (poolingConfig.highFrequencyPoolingInterval) {
+      pool.highFrequencyPoolingInterval =
+        poolingConfig.highFrequencyPoolingInterval;
+    }
+
+    if (poolingConfig.stockVariationThreshold) {
+      pool.stockVariationThreshold = poolingConfig.stockVariationThreshold;
+    }
+
     this.poolings.push(pool);
 
     return pool;
